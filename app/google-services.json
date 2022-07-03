@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "996966022936",
+    "firebase_url": "https://go-bd-go.firebaseio.com",
+    "project_id": "go-bd-go",
+    "storage_bucket": "go-bd-go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996966022936:android:8f3a9b2485293f83aca86d",
+        "android_client_info": {
+          "package_name": "com.evanemran.warrentyhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996966022936-2uietic7bvenfgv0ks8eg4acqu1a1bfp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqUXsWKBZeRrVvmcnRPGUkLp8labXIR9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "996966022936-2uietic7bvenfgv0ks8eg4acqu1a1bfp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

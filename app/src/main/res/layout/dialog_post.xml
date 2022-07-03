@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@color/white">
+    
+    <TextView
+        android:text="Add a new product"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/editText_prodName"
+        android:inputType="text"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:hint="Product Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:prompt="@string/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <Spinner
+        android:id="@+id/spinnerShopName"
+        android:prompt="@string/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/editText_shopAddress"
+        android:inputType="text"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:hint="Shop Address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:visibility="gone"
+        android:id="@+id/editText_shopPhone"
+        android:inputType="phone"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:hint="Shop Phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/editText_invoiceNo"
+        android:inputType="text"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:hint="Invoice No:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/editText_warrantyDate"
+        android:inputType="date"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:hint="Warranty Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    <EditText
+        android:id="@+id/editText_prodDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lines="6"
+        android:gravity="top|start"
+        android:minLines="4"
+        android:hint="Remarks"
+        android:maxLines="6"
+        android:scrollbars="vertical"/>
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/imageView_selected"
+        android:scaleType="centerCrop"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <TextView
+        android:text="Attach Image to of Product &amp; Invoice"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:padding="8dp"
+        android:textAlignment="center"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/button_product_upload"
+                android:src="@drawable/ic_upload"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+            <TextView
+                android:text="Product"
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:textAlignment="center"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_width="16dp"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/button_invoice_upload"
+                android:src="@drawable/ic_upload"
+                android:scaleType="centerCrop"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+            <TextView
+                android:text="Invoice"
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:textColor="@color/black"
+                android:padding="8dp"
+                android:textAlignment="center"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:id="@+id/button_post"
+        android:text="Post"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
