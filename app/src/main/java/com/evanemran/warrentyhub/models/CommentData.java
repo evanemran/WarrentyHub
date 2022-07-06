@@ -5,4 +5,7 @@ public class CommentData {
     String commentBody;
     String commentedBy;
     String commentTime;
+
+    public CommentData() {
+    }
 }

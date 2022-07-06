@@ -13,6 +13,9 @@ public class ShopData {
         this.shopAddress = shopAddress;
     }
 
+    public ShopData() {
+    }
+
     public String getShopId() {
         return shopId;
     }

@@ -2,6 +2,7 @@ package com.evanemran.warrentyhub.dialog;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,8 +35,11 @@ import com.evanemran.warrentyhub.models.PostData;
 import com.evanemran.warrentyhub.models.ShopData;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class PostDialog extends DialogFragment {
 
@@ -50,6 +55,7 @@ public class PostDialog extends DialogFragment {
     List<ShopData> shopDataList = new ArrayList<>();
     Uri filePath;
     PostData postData = new PostData();
+    final Calendar myCalendar= Calendar.getInstance();
 
 
     public PostDialog(PostListener listener) {
@@ -106,6 +112,22 @@ public class PostDialog extends DialogFragment {
         CategorySpinnerAdapter categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), categoryDataList);
         spinnerCategory.setAdapter(categorySpinnerAdapter);
 
+        DatePickerDialog.OnDateSetListener date =new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH,month);
+                myCalendar.set(Calendar.DAY_OF_MONTH,day);
+                updateLabel();
+            }
+        };
+
+        editText_warrantyDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(getContext(),date,myCalendar.get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
 
         button_product_upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +171,12 @@ public class PostDialog extends DialogFragment {
 
             }
         });
+    }
+
+    private void updateLabel(){
+        String myFormat="dd/MM/yyyy";
+        SimpleDateFormat dateFormat=new SimpleDateFormat(myFormat, Locale.US);
+        editText_warrantyDate.setText(dateFormat.format(myCalendar.getTime()));
     }
 
     private boolean isValidData() {

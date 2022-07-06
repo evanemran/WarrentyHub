@@ -11,6 +11,9 @@ public class PostData {
     String posTTime = "";
     CategoryData categoryData;
 
+    public PostData() {
+    }
+
     public String getPostId() {
         return postId;
     }

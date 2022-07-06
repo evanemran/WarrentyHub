@@ -9,6 +9,9 @@ public class CategoryData {
         this.categoryName = categoryName;
     }
 
+    public CategoryData() {
+    }
+
     public String getCategoryId() {
         return categoryId;
     }

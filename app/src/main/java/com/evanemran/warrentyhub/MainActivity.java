@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +27,9 @@ import android.widget.Toast;
 
 import com.evanemran.warrentyhub.adapters.DrawerAdapter;
 import com.evanemran.warrentyhub.dialog.PostDialog;
+import com.evanemran.warrentyhub.fragments.CategoryFragment;
+import com.evanemran.warrentyhub.fragments.HomeFragment;
+import com.evanemran.warrentyhub.fragments.ProductFragment;
 import com.evanemran.warrentyhub.listeners.ClickListener;
 import com.evanemran.warrentyhub.listeners.PostListener;
 import com.evanemran.warrentyhub.models.ImageUri;
@@ -43,14 +49,15 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    RecyclerView recyclerview_home;
     DrawerLayout drawer;
     TextView version_name;
     FirebaseDatabase firebaseDatabase;
@@ -58,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     FloatingActionButton fab_add;
-    PostData newPost;
 
 
     @Override
@@ -66,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerview_home = findViewById(R.id.recyclerview_home);
         version_name = findViewById(R.id.version_name);
         fab_add = findViewById(R.id.fab_add);
 
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("posts");
+
+        replaceFragment(new HomeFragment());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -126,7 +133,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final ClickListener<NavMenu> navMenuClickListener = new ClickListener<NavMenu>() {
         @Override
         public void onClicked(NavMenu item) {
+            switch (item){
+                case HOME:
+                    replaceFragment(new HomeFragment());
+                    break;
+                case CATEGORIES:
+                    replaceFragment(new CategoryFragment());
+                    break;
+                case PRODUCTS:
+                    replaceFragment(new ProductFragment());
+                    break;
+                case SHOPS:
+                    Toast.makeText(MainActivity.this, "Will add soon", Toast.LENGTH_SHORT).show();
+                    break;
+                case SETTINGS:
+                    Toast.makeText(MainActivity.this, "Will add soon", Toast.LENGTH_SHORT).show();
+                    break;
+                case LOGOUT:
+                    Toast.makeText(MainActivity.this, "Will add soon", Toast.LENGTH_SHORT).show();
+                    break;
+            }
             Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            drawer.closeDrawer(GravityCompat.START);
         }
     };
 
@@ -136,19 +164,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void replaceFragment(Fragment fragment){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
     private final PostListener postDataClickListener = new PostListener() {
         @Override
         public void onPostClicked(PostData data, List<ImageUri> imageUri) {
 
-            uploadImage(data, imageUri);
+            data.setPostedBy(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()+" ");
+            SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm a");
+            Date date = new Date();
+            data.setPosTTime(format.format(date));
+
+            databaseReference = firebaseDatabase.getReference("posts");
+            String key = databaseReference.push().getKey();
+            data.setPostId(key);
+
+            if (!imageUri.isEmpty()){
+                uploadImage(data, imageUri, key);
+            }
+
+            else {
+                databaseReference.child(key).setValue(data);
+                Toast.makeText(MainActivity.this, "Posted!", Toast.LENGTH_SHORT).show();
+            }
 
         }
     };
 
-    private void uploadImage(PostData data, List<ImageUri> imageUriList) {
+    private void uploadImage(PostData data, List<ImageUri> imageUriList, String key) {
         ProgressDialog progressDialog
                 = new ProgressDialog(this);
-        progressDialog.setTitle("Uploading...");
+        progressDialog.setTitle("Uploading Image...");
         progressDialog.show();
 
         for (ImageUri uri: imageUriList){
@@ -170,11 +222,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 data.setProDuctImage(uri.toString());
-
-                                                progressDialog.dismiss();
+                                                databaseReference.child(key).setValue(data);
                                                 Toast.makeText(MainActivity.this,
                                                         "Product Image Uploaded!!",
                                                         Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
                                             }
                                         });
 
@@ -186,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onFailure(@NonNull Exception e) {
 
                         // Error, Image not uploaded
+                        progressDialog.dismiss();
                         Toast.makeText(MainActivity.this,
                                         "Failed " + e.getMessage(),
                                         Toast.LENGTH_SHORT)
@@ -211,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 });
             }
             else if(uri.getImageCode()==102){
+                progressDialog.setTitle("Uploading Invoice image...");
+                progressDialog.show();
                 StorageReference ref
                         = storageReference
                         .child(
@@ -229,11 +284,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 data.setInVoiceImage(uri.toString());
-
-                                                progressDialog.dismiss();
+                                                databaseReference.child(key).setValue(data);
                                                 Toast.makeText(MainActivity.this,
-                                                        "Image Uploaded!!",
+                                                        "Invoice Image Uploaded!!",
                                                         Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
                                             }
                                         });
 
@@ -245,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onFailure(@NonNull Exception e) {
 
                         // Error, Image not uploaded
+                        progressDialog.dismiss();
                         Toast.makeText(MainActivity.this,
                                         "Failed " + e.getMessage(),
                                         Toast.LENGTH_SHORT)
@@ -271,12 +327,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        data.setPostedBy(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()+" ");
-        databaseReference = firebaseDatabase.getReference("posts");
-        String key = databaseReference.push().getKey();
-        data.setPostId(key);
-        databaseReference.child(key).setValue(data);
-        Toast.makeText(MainActivity.this, "Posted!", Toast.LENGTH_SHORT).show();
         progressDialog.dismiss();
     }
 
